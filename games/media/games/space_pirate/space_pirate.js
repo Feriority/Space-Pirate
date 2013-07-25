@@ -29,7 +29,7 @@ undum.game.situations = {
     }),
     'wake-up': new undum.Situation({
         enter: function(character, system, from) {
-            system.setCharacterText("<p>Enough about dreams, you have a job to do.</p>")
+            system.setCharacterText("<p>Enough about dreams, you've got work to do.</p>")
             system.write($("#wake-up").html());
         }
     }),
@@ -49,13 +49,23 @@ undum.game.situations = {
             system.write($("#leave-ship").html());
         }
     }),
-    'board-station': new undum.Situation({
-        enter: function(character, system, from) {
-            system.write("<p>You put on your helmet, and your HUD springs to life.</p>");
-            system.setQuality('armor', 100);
-            system.write($("#board-station").html());
+    'board-station': new undum.SimpleSituation("<p>You put on your helmet, and your HUD springs to life.</p>",
+        {
+            enter: function(character, system, from) {
+                system.setQuality('armor', 100);
+                system.write($("#board-station").html());
+                system.doLink('station-entrance');
+            }
         }
-    }),
+    ),
+    'station-entrance': new undum.Situation({
+        enter: function(character, system, from) {
+            if (from !== 'board-station') {
+                system.write($('#station-entrance-desc').html());
+            }
+            system.write($('#station-entrance').html());
+        }
+    })
 };
 
 // ---------------------------------------------------------------------------
