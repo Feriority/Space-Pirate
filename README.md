@@ -12,6 +12,7 @@ you want to make a game.
 ## Compatibility
 
 From the Undum docs:
+
     Undum is designed for HTML5 and CSS3 browsers. It has been tested on
     Firefox 3.6, Chrome 5, and Safari 5. Older browsers may work okay too,
     but some of the animation won't work, the styles may render poorly,
@@ -20,6 +21,16 @@ From the Undum docs:
     fork this project on Github.
 
 Space Pirate should run on any browser that Undum supports.
+
+## Running the server
+
+Pretty much anything that can serve static content can serve this. There's
+no work being done server-side; save states are handled locally using
+browser storage. I've been using `python -m SimpleHTTPServer` (python 2.x)
+or `python -m http.server` (python 3).
+
+There's a ruby server in the repo I inherited from Undum; if you want to
+figure it out, go ahead.  I'm not using it.
 
 ## License
 
