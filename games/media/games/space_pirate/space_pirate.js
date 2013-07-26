@@ -107,6 +107,36 @@ undum.game.situations = {
     'station-medbay': new undum.Situation({
         enter: function(character, system, from) {
             system.write($('#station-medbay').html());
+            if (!character.sandbox.medbay_explored) {
+                character.sandbox.medbay_explored = true;
+                system.write("<p>You take what medical supplies you can - some will\
+                    be useful to keep, others will sell well once you leave.</p>"
+                );
+            }
+            if (!character.sandbox.medbay_looted) {
+                system.write("<p>There's a lockbox with what looks like replacement\
+                    parts for your suit.</p>"
+                );
+                if (character.qualities.vim >= 2) {
+                    system.write("<p>You think you can <a href='./break' class='once'>break it open</a>.</p>");
+                } else {
+                    system.write("<p>Maybe if you could find a way to break it open...</p>");
+                }
+            }
+            system.write("<p>You can <a href='station-work'>go back</a>.</p>");
+        },
+        act: function(character, system, action) {
+            if (action === 'break') {
+                system.setQuality('vigor', character.qualities.vigor + 1);
+                system.write("<p>The upgrades make your suit a little tougher.  You also find some compatible tools.</p>");
+                if (character.qualities.verve < 5) {
+                    system.setQuality('verve', character.qualities.verve + 1);
+                    system.write("<p>You take them along - they might be useful.</p>");
+                } else {
+                    system.write("<p>You leave them behind - your existing equipment is better.</p>");
+                }
+                character.sandbox.medbay_looted = true;
+            }
         }
     }),
     'station-security': new undum.Situation({
@@ -189,6 +219,32 @@ undum.game.situations = {
     'station-rec': new undum.Situation({
         enter: function(character, system, from) {
             system.write($('#station-rec').html());
+            if (!character.sandbox.rec_looted) {
+                system.write("<p>Your HUD flickers as you enter the room.  It's\
+                    probably nothing, but you feel nervous anyway.</p>"
+                );
+                if (character.qualities.verve >= 2) {
+                    system.write("<p>You think you can <a href='./improvise' class='once'>improvise some gear</a> from the parts here.</p>");
+                } else {
+                    system.write("<p>Maybe with some tools, you could get something useful from the parts here.</p>");
+                }
+            }
+            system.write("<p>You can <a href='station-offduty'>go back</a>.</p>");
+        },
+        act: function(character, system, action) {
+            if (action === 'improvise') {
+                system.setQuality('vigor', character.qualities.vigor + 1);
+                system.write("<p>You can use some of the equipment to patch up your suit's defenses.</p>");
+                if (character.qualities.vim < 5) {
+                    system.setQuality('vim', character.qualities.vim + 1);
+                    system.write("<p>You also improvise a weapon from the parts you find.</p>");
+                } else {
+                    system.write("<p>You consider creating a weapon, but your gun\
+                        is better than anything you could make here.</p>"
+                    );
+                }
+                character.sandbox.rec_looted = true;
+            }
         }
     }),
     'station-command': new undum.Situation({
@@ -299,6 +355,10 @@ undum.game.init = function(character, system) {
     character.qualities.macguffin = 0;
     character.qualities.security_card = 0;
     character.qualities.grenades = 0;
+
+    character.sandbox.medbay_explored = false;
+    character.sandbox.medbay_looted = false;
+    character.sandbox.rec_looted = false;
 
     character.sandbox.rec_to_command = false;
     character.sandbox.work_to_command = false;
