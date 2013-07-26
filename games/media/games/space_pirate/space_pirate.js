@@ -71,7 +71,6 @@ undum.game.situations = {
             }
         }
     }),
-    //TODO actually write this
     'station-work': new undum.Situation({
         enter: function(character, system, from) {
             system.write($('#station-work').html());
@@ -83,19 +82,27 @@ undum.game.situations = {
                 if (character.sandbox.rec_to_command) {
                     system.doLink('station-command');
                 } else {
-                    system.write("<p>Placeholder for problem blocking this path.</p>");
+                    system.write("<p>The bulkhead to the command deck appears to have never closed.  However,\
+                        there is still a security door with a hardened lock blocking your path.</p>"
+                    );
                     if (character.qualities.verve >= 5) {
-                        system.write("<p>Placeholder for <a href='./solving'>solving</a> problem with verve.</p>");
+                        system.write("<p>With your tools, you believe you can\
+                            <a href='./pick' class='once'>disable the lock</a>.\
+                            It's a difficult one, but nothing outside your abilities.</p>"
+                        );
                     } else {
-                        system.write("<p>Placeholder for being unable to solve the problem.</p>");
+                        system.write("<p>You don't see any way to get through the door.\
+                           Maybe with the right tools, it would be possible.</p>"
+                        );
                     }
                 }
-            } else if (action === 'solving') {
-                system.write("<p>Placeholder for the actual solution.</p>");
-                character.sandbox.work_to_command = True;
-            } else if (action === 'security') {
-                system.write("<p>Placeholder for you can't go there yet.</p>");
+            } else if (action === 'pick') {
+                system.write("<p>It takes a little while, but you finally get the lock open and can\
+                    access <a href='station-command'>the command deck</a>.</p>"
+                );
+                character.sandbox.work_to_command = true;
             }
+        }
     }),
     'station-medbay': new undum.Situation({
         enter: function(character, system, from) {
@@ -104,8 +111,47 @@ undum.game.situations = {
     }),
     'station-security': new undum.Situation({
         enter: function(character, system, from) {
-            system.write($('#station-security').html());
+            if (!character.sandbox.security_disabled) {
+                system.write("<p>Despite the overall loss of power, the security\
+                    office's automated defenses are still partially active.  It\
+                    would be too dangerous to try to enter the offices without\
+                    doing something about it first.<p>"
+                );
+                if (character.qualities.grenades > 0) {
+                    system.write("<p>You think you could clear the turret at the door with\
+                        <a href='./grenade' class='once'>the EMP grenade you found</a>.</p>"
+                    );
+                }
+                system.write("<p>You can <a href='station-work'>go back</a>.</p>");
+            } else {
+                system.doLink('station-security-inside');
+            }
+        },
+        act: function(character, system, action) {
+            if (action === 'grenade') {
+                system.setQuality('grenades', character.qualities.grenades - 1);
+                system.write("<p>You lob the grenade at the automated defenses, and\
+                    hope it actually works as you duck back around a corner.\
+                    You hear the crackling blast of the grenade, and look back\
+                    to see the turret disabled.</p>"
+                );
+                character.sandbox.security_disabled = true;
+                system.doLink('station-security-inside');
+            }
         }
+    }),
+    'station-security-inside': new undum.Situation({
+        enter: function(character, system, from) {
+            system.write($('#station-security-inside').html());
+            if (!character.qualities.security_card) {
+                system.write("<p>Looking around the offices for anything still\
+                    left, you find a security card, and grab it.  It could come\
+                    in handy.</p>"
+                );
+                system.setQuality('security_card', 1);
+            }
+            system.write("<p>You can <a href='station-work'>go back</a>.</p>");
+        },
     }),
     'station-offduty': new undum.Situation({
         enter: function(character, system, from) {
@@ -128,7 +174,9 @@ undum.game.situations = {
                             the broken drone out of the way and open a path through.</p>"
                         );
                     } else {
-                        system.write("<p>You don't see any way through the gap.</p>");
+                        system.write("<p>You don't see any way through the gap.  If you had some way to\
+                            clear the bot out, maybe?</p>"
+                        );
                     }
                 }
             } else if (action === 'blast') {
@@ -145,12 +193,54 @@ undum.game.situations = {
     }),
     'station-command': new undum.Situation({
         enter: function(character, system, from) {
+            character.sandbox.rec_to_command = true;
+            character.sandbox.work_to_command = true;
             system.write($('#station-command').html());
+            system.write($('#station-command-nav').html());
+        },
+        act: function(character, system, action) {
+            if (action === 'spire') {
+                system.write($('#station-spire-security'));
+                if (character.qualities.security_card) {
+                    system.write("<p>Your security card opens the gate, and you are free\
+                        to travel to <a href='station-spire'>the spire</a>.</p>"
+                    );
+                } else {
+                    system.write("<p>You'll need to find some way through the security system.</p>");
+                    if (character.qualities.grenades === 0 && character.sandbox.security_disabled === false) {
+                        system.write("<p>Searching the security checkpoint, you find an EMP grenade\
+                            that must have been left behind when the crew abandoned the station.</p>"
+                        );
+                        system.setQuality('grenades', 1);
+                    }
+                    system.write("<p>You go back to the command area.</p>")
+                    system.write($('#station-command-nav').html());
+                }
+            }
         }
     }),
     'station-spire': new undum.Situation({
         enter: function(character, system, from) {
-            system.write($('#station-command').html());
+            system.write($('#station-spire').html());
+            system.setCharacterText('<p>Go Back</p>');
+        },
+        act: function(character, system, action) {
+            if (action === 'stop') {
+                if (character.sandbox.orb_count < character.sandbox.orb_lines.length) {
+                    system.write(character.sandbox.orb_lines[character.sandbox.orb_count]);
+                    character.sandbox.orb_count += 1;
+                } else {
+                    system.setQuality('macguffin', 1);
+                    system.setCharacterText('<p>Well done.</p>');
+                    system.write('<p>"-listening to me?  The Euryphaessa is already in the system, we need to leave NOW!"</p>');
+                    system.doLink('station-entrance');
+                }
+            }
+        }
+    }),
+    'escape': new undum.Situation({
+        enter: function(character, system, from) {
+            system.write($('#escape').html());
         }
     }),
 };
@@ -177,7 +267,13 @@ undum.game.qualities = {
         "Suit Condition", {priority:"0004", group:'stats'}
     ),
     macguffin: new undum.OnOffQuality(
-        "MacGuffin", {priority:"0001", group:'inventory'}
+        "???", {priority:"0001", group:'inventory'}
+    ),
+    security_card: new undum.OnOffQuality(
+        "Security Card", {priority:"0002", group:'inventory'}
+    ),
+    grenades: new undum.NonZeroIntegerQuality(
+        "EMP Grenades", {priority:"0003", group:'inventory'}
     ),
 };
 
@@ -201,11 +297,21 @@ undum.game.init = function(character, system) {
     character.qualities.vigor = 1;
     character.qualities.armor = 0;
     character.qualities.macguffin = 0;
+    character.qualities.security_card = 0;
+    character.qualities.grenades = 0;
 
     character.sandbox.rec_to_command = false;
     character.sandbox.work_to_command = false;
     character.sandbox.security_disabled = false;
-    character.sandbox.has_security_badge = false;
+
+    character.sandbox.orb_count = 0;
+    character.sandbox.orb_lines = [
+        "<p>You reach for the orb, and hesitate.  That wasn't what you meant to do, was it? <a href='./stop'>Go back</a>.</p>",
+        "<p>You reach out again.  No.  This is wrong. <a href='./stop'>Go back</a>.</p>",
+        "<p>It seemed so close, but you're stretching and can't quite reach it.  Give up and <a href='./stop'>go back</a>.</p>",
+        "<p>Just a little closer and it's yours... You shouldn't just <a href='./stop'>go back</a>.</p>",
+        "<p><a href='./stop'>GO BACK</a></p>",
+    ];
 
     system.setCharacterText("<p>???</p>");
 };

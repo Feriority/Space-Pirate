@@ -34,7 +34,7 @@
         <div id="toolbar">
             <!-- Set this to be a small version of the title, for the
             toolbar on mobile devices. -->
-            <h1>Undum</h1>
+            <h1>Space Pirate</h1>
             <div class="nav">
                 <a href="#" class="button" id="menu-button">Menu</a>
             </div>
@@ -53,7 +53,7 @@
                     <!-- Game Background: edit this -->
                     <h1>Space Pirate</h1>
                     <p>
-                    Why did the adventure game genre die?  Pretty sure it was not enough space pirates.
+                    An adventure game IN SPAAAACE.
                     </p>
                     <!-- End of Game Background -->
 
@@ -236,8 +236,8 @@
                 The station is a rotating ring around a central spire.  This
                 gives some natural references for navigation - moving along
                 with the station is turnwise, and moving against it is
-                anti-turnwise.  You can also move radially in - hubward - or out
-                - rimward.
+                anti-turnwise.  The floor is the outer wall of the ring, to
+                take advantage of the simulated gravity the rotation creates.
                 </p>
 
                 <h1>Artosis Station</h1>
@@ -254,8 +254,7 @@
                 are a number of cabins nearby, which are easy enough for you to
                 break into; you look for anything worth looting, but the real
                 valuables are going to be elsewhere in the station, and you don't
-                find anything worth taking.  There are also doors turnwise and
-                anti-turnwise to other parts of the station.
+                find anything worth taking.
                 </p>
             </div>
 
@@ -263,16 +262,16 @@
                 <p>
                 You're in the residential area you used to enter the station.
                 The Spyglass is anchored to the station's hull outside a breach.
-                There are a number of cabins, which you have already searched.  There
-                are doors turnwise and anti-turnwise to other parts of the station.
+                There are a number of cabins, which you have already searched.
                 </p>
             </div>
 
             <div id="station-entrance" class='transient'>
-                <ul class='options'>
-                    <li><a href='station-offduty'>Go turnwise.</a></li>
-                    <li><a href='station-work'>Go anti-turnwise.</a></li>
-                </ul>
+                <p>
+                There are doors turnwise and anti-turnwise to other parts of
+                the station.  According to your map, they lead to
+                <a href='station-offduty'>an off-duty area</a> and
+                <a href='station-work'>the main labs</a>, respectively.
             </div>
 
             <!-- Off duty -->
@@ -291,37 +290,142 @@
                 </p>
 
                 <p>
-                You can also <a href='station-entrance'>go back to the entrance</a>.
+                You can also <a href='station-entrance'>go back</a> to the entrance.
                 </p>
             </div>
 
             <div id="station-rec">
-                <p>Nothing here yet, go <a href='station-offduty'>back</a></p>
+                <p>Nothing here yet, <a href='station-offduty'>go back</a></p>
             </div>
 
             <!-- Work -->
             <div id="station-work">
                 <p>
-                This part of the station was where the crew worked.  The map on
-                the wall shows <a href='station-medbay'>a medbay</a>, a
-                <a href='./security'>security office</a>, and a
+                This part of the station was where the crew worked.  Most
+                of it is lab space, but you don't have the time to move
+                the heavy equipment that would be most valuable; you'll
+                have to settle for the various samples and small things
+                you grabbed during a quick pass.
+                </p>
+                <p>
+                The map on the wall shows <a href='station-medbay'>a medbay</a>,
+                a <a href='station-security'>security office</a>, and a
                 <a href='./spire'>path to the central spire</a>.  The
                 <a href='./command'>command deck</a> should be anti-turnwise
                 from here.
                 </p>
 
                 <p>
-                You can also <a href='station-entrance'>go back to the entrance</a>.
+                You can also <a href='station-entrance'>go back</a> to the entrance.
                 </p>
             </div>
 
             <div id="station-medbay">
-                <p>Nothing here yet, go <a href='station-work'>back</a></p>
+                <p>Nothing here yet, <a href='station-work'>go back</a></p>
             </div>
-            <!-- Command and spire -->
 
+            <div id="station-security-inside">
+                <p>
+                With the security systems disabled, you find it easy to make it
+                into the security offices.  Whatever happened here, they got hit
+                pretty badly - the area is mostly destroyed.  Strangely, some of
+                the blown out walls seem to have been destroyed from the inside.
+                </p>
+                <p>
+                Normally, this would be a great location to loot, but the armory
+                seems to have been lost to the vacuum.
+                </p>
+            </div>
+
+            <!-- Command and spire -->
             <div id='station-command'>
-                <p>Nothing here yet. <a href='station-entrance'>Teleport away!</a></p>
+                <p>
+                You make your way through the command deck slowly and carefully.
+                Rubble is everywhere, but oddly the hull doesn't appear to have
+                been breached anywhere in this section of the station; it's just
+                the interior structures that have been blasted apart.
+                </p>
+                <p>
+                A large, transparent section of the hull allows you to see the
+                planet spinning below.  The view is amazing; for a moment, you
+                remember exactly why you decided to spend your life as a spacer
+                instead of settling down on some station or colony.  There's some
+                sort of storm raging below; it must be huge, to be visible from
+                orbit, and the whirling red and purple clouds are a fantastic sight.
+                </p>
+                <p>
+                You try to reach the actual station controls and communication systems,
+                but they're completely inaccessible.  You can, however, access the
+                overrides to the doors that lead turnwise and anti-turnwise, which
+                should give you a clear path around the entire loop of the station.
+                </p>
+            </div>
+            <div id='station-command-nav'>
+                <p>
+                There is another <a href='./spire'>path to the spire</a> from this
+                deck.  You can also go turnwise to <a href='station-work'>the main labs</a>
+                or anti-turnwise to <a href='station-offduty'>the off-duty area</a>.
+                </p>
+            </div>
+
+            <div id='station-spire-security'>
+                <p>
+                This path to the spire, at least, is totally clear of rubble.  You
+                find a gate blocking off the elevator into the core of the station,
+                however - the warnings indicate that the spire labs are high security,
+                and under lockdown.  There's also various safety warnings about the
+                shifting gravity along the elevator path, and the low-gravity spire.
+                </p>
+            </div>
+
+            <div id='station-spire'>
+                <p>
+                The elevator to the spire is unpowered; you have to climb a ladder up
+                an emergency shaft.  It's long, but the gravity drops off as you climb,
+                so it's an easier trip than it looks.  You're practically flying at the
+                end of the climb, pushing off the ladder to move up the shaft.
+                </p>
+                <p>
+                There's a second sealed door at the top of the shaft, but your security
+                card unlocks it.  You float through, and find yourself in another lab.
+                This one is a wreck; the spire walls are perforated, despite looking a
+                a lot sturdier than the ring walls were.  Most of the equipment is in
+                ruins.
+                </p>
+                <p>
+                "Hey, boss?"  *Caliburn cuts through.  "We've got movement at the outer
+                comm buoy.  I hope you've found something good, because we need to get
+                out of here fast."
+                </p>
+                <p>
+                You don't have much time, but your findings have been pretty meager so
+                far - you should at least search this lab before you leave.  It's what
+                it looked like, all wreckage - but then you move what's left of a door
+                aside, and find a brilliant glowing ball, floating in place.  It's
+                surface is covered in violently shifting reds and purples like the storm
+                you saw on the planet below.
+                </p>
+                <p>
+                You consider trying to grab the orb, but something about it feels wrong.
+                It would be smarter to leave it alone and <a href='./stop'>go back</a>.
+                </p>
+            </div>
+
+            <!-- Escape -->
+            <div id='escape'>
+                <p>
+                You don't really remember how you made it back to the Spyglass, but you
+                get aboard in time and detach the ship from Artosis Station's hull.
+                By the time you're ready to leave, you can already see the Euryphaessa
+                approaching.  It's a huge warship - not what you'd expect to see here
+                at all.  You briefly wonder why it's here, but know better than to stick
+                around to find out - you get out of there, quick.
+                </p>
+                <p>
+                As you jump out of the system, you get the feeling you've forgotten
+                about something important...
+                </p>
+                <h1>End of Act 1</h1>
             </div>
         </div>
 
