@@ -160,13 +160,13 @@ undum.game.situations = {
         act: function(character, system, action) {
             if (action === 'grenade') {
                 system.setQuality('grenades', character.qualities.grenades - 1);
+                character.sandbox.security_disabled = true;
                 system.write("<p>You lob the grenade at the automated defenses, and\
                     hope it actually works as you duck back around a corner.\
                     You hear the crackling blast of the grenade, and look back\
-                    to see the turret disabled.</p>"
+                    to see the turret disabled.  You can now\
+                    <a href='station-security-inside'>go inside</a>.</p>"
                 );
-                character.sandbox.security_disabled = true;
-                system.doLink('station-security-inside');
             }
         }
     }),
