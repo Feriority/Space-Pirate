@@ -117,9 +117,8 @@ p {
 hr {
     border: none;
     background-color: rgba(0,0,0,0.25);
-    margin: -1px 0 -1px -2.8em;
-    width: 1.1em;
     height: 2px;
+    align: center;
 }
 p + p, p + img + p, p + hr + p {
     text-indent: 1.6em;

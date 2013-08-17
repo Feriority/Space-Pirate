@@ -13,7 +13,7 @@ undum.game.id = "spess-mahreen"
  * used to control saved-games. If you change the content of a game,
  * the saved games are unlikely to work. Changing this version number
  * prevents Undum from trying to load the saved-game and crashing. */
-undum.game.version = "0.1";
+undum.game.version = "0.5";
 
 /* The situations that the game can be in. Each has a unique ID. */
 undum.game.situations = {
@@ -33,6 +33,17 @@ undum.game.situations = {
             system.write($("#wake-up").html());
         }
     }),
+    'get-up': new undum.Situation({
+        enter: function(character, system, from) {
+            system.write($("#get-up").html());
+        }
+    }),
+    'get-ready': new undum.Situation({
+        enter: function(character, system, from) {
+            system.write($("#get-ready").html());
+            system.setQuality('armor', 100);
+        }
+    }),
     'get-gun': new undum.Situation({
         enter: function(character, system, from) {
             system.setQuality('vim', character.qualities.vim + 4);
@@ -49,16 +60,13 @@ undum.game.situations = {
             system.write($("#leave-ship").html());
         }
     }),
-    'board-station': new undum.SimpleSituation("<p>You put on your helmet, and your HUD springs to life.</p>",
-        {
-            enter: function(character, system, from) {
-                system.setQuality('armor', 100);
-                system.write($("#board-station").html());
-                system.doLink('station-entrance');
-                system.setCharacterText("<p>Welcome to Artosis Station.</p>")
-            }
+    'board-station': new undum.Situation({
+        enter: function(character, system, from) {
+            system.write($("#board-station").html());
+            system.doLink('station-entrance');
+            system.setCharacterText("<p>Welcome to Artosis Station.</p>")
         }
-    ),
+    }),
     'station-entrance': new undum.Situation({
         enter: function(character, system, from) {
             if (from !== 'board-station') {
